@@ -1,0 +1,10 @@
+timezone: UTC
+
++setup:
+  echo>: start ${session_time}
+
++run:
+    sh>: docker run --rm embulk:latest run /conf/world.yml 
+
++teardown:
+  echo>: finish ${session_time}
