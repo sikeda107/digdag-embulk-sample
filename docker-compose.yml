@@ -1,0 +1,36 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13.5-alpine
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    command: 'postgres -c config_file="/etc/postgresql.conf"'
+    volumes:
+      - "$PWD/my-postgres.conf:/etc/postgresql.conf"
+    environment:
+      POSTGRES_USER: digdag
+      POSTGRES_PASSWORD: digdag
+      POSTGRES_DB: digdag
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+  digdag-server:
+    build: .
+    container_name: digdag-server
+    hostname: digdag-server
+    ports:
+      - "65433:65433"
+      - "65432:65432"
+    volumes:
+      - $PWD/workflow:/workflow
+      - $PWD/wait-for-postgres.sh:/wait-for-postgres.sh
+      - $PWD/log:/var/log/digdag/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_USERNAME: digdag
+      DB_PASSWORD: digdag
