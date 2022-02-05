@@ -1,0 +1,11 @@
+in:
+  type: mysql
+  host: 0.0.0.0
+  user: root
+  password: "root"
+  database: world
+  query: |
+    SELECT *
+    FROM city
+out:
+  type: stdout
